@@ -1,11 +1,10 @@
 describe('Formulário de Login', () => {
-    beforeEach(() => {
-        cy.login('gabriel@email.com', 'senha123')
-    })
-
     it('Deve acessar a página home', () => {
+        cy.login('gabriel@email.com', 'senha123')
+        cy.visit('/home')
+
         cy.getByData('titulo-boas-vindas')
-            .should('contain','Bem vindo de volta!')
+            .should('contain', 'Bem vindo de volta!')
     })
 
     it('Não deve permitir um email inválido', () => {
