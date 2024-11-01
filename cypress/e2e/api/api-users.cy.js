@@ -19,5 +19,16 @@ describe('Realizando requisições para a API', () => {
                 expect(response.body).to.have.property('nome')
             })
         })
+
+        it('Deve retornar um erro quando o usuário for inválido', () => {
+            cy.request({
+                method: 'GET',
+                url: 'http://localhost:8000/users/7393be94-5598-49e3',
+                failOnStatusCode: false,
+            }).then(response => {
+                expect(response.status).to.eq(404)
+                expect(response.body).to.eq('Not Found')
+            })
+        })
     })
 })
