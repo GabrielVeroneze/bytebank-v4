@@ -1,4 +1,8 @@
 describe('Realizando requisições para a API', () => {
+    beforeEach(() => {
+        Cypress.session.clearAllSavedSessions()
+    })
+
     context('GET /users', () => {
         it('Deve retornar uma lista de usuários', () => {
             cy.request('GET', 'http://localhost:8000/users')
@@ -29,6 +33,26 @@ describe('Realizando requisições para a API', () => {
                 expect(response.status).to.eq(404)
                 expect(response.body).to.eq('Not Found')
             })
+        })
+    })
+
+    context('Interceptando solicitações de rede', () => {
+        it('Deve fazer a interceptação do POST users/login', () => {
+            cy.intercept('POST', 'users/login').as('loginRequest')
+            cy.login('gabriel@email.com', 'senha123')
+            cy.wait('@loginRequest').then(interception => {
+                interception.response = {
+                    statusCode: 200,
+                    body: {
+                        success: true,
+                        message: 'Login bem sucedido!',
+                    },
+                }
+            })
+            cy.visit('/home')
+
+            cy.getByData('titulo-boas-vindas')
+                .should('contain.text', 'Bem vindo de volta!')
         })
     })
 })
