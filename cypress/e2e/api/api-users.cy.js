@@ -74,5 +74,22 @@ describe('Realizando requisições para a API', () => {
                 expect(response.body.senha).to.eq(usuario.senha)
             })
         })
+
+        it('Retorna erro 404 para usuário inexistente', () => {
+            const usuario = {
+                nome: 'Nome Inválido',
+                senha: '123456',
+            }
+
+            cy.request({
+                method: 'PUT',
+                url: 'http://localhost:8000/users/usuario-inexistente',
+                body: usuario,
+                failOnStatusCode: false,
+            }).then(response => {
+                expect(response.status).to.eq(404)
+                expect(response.body).to.eq('Not Found')
+            })
+        })
     })
 })
